@@ -1,0 +1,5 @@
+- name: Install deb
+  delegate_to: app1
+  apt:
+    deb: /home/dan/Рабочий стол/Sick-test WEB/SICK_Program/SICK-DEB-amd-64.deb
+  become: true

@@ -1,0 +1,60 @@
+- hosts: localdomain
+  become: yes
+  tasks:
+# Проверка на наличие сервиса
+    - name: Test status service
+      shell: systemctl status SickScales
+      register: command_output  
+      ignore_errors: yes
+
+    - name: Display command output
+      debug:
+        var: command_output.stdout_lines
+# Отправка на сервера скрипта остановки сервиса
+#Надо изменить в файле StopAndRemove.sh названия и папки скрипта
+
+# Скрипт останавливает работающий сервис, удаляет его директорию, создаёт директорию заново для копирования в неё же обновлённой версии
+    - copy:
+        src: StopAndRemove.sh
+        dest: ~/StopAndRemove.sh
+# Выдача прав на исполнение соответствующему скрипту
+    - name: Redact rules
+      shell: chmod 755 ~/StopAndRemove.sh
+      register: command_output
+      ignore_errors: yes
+
+# Запуск скрипта
+    - name: Stop service and remove
+      shell: sudo ~/StopAndRemove.sh
+      register: command_output  
+      ignore_errors: yes
+
+# !Необходимо изменить папку назначения!
+# Отправка на сервер новой версии программы
+# Где /var/lib/wimlc - папка назначения
+
+    - copy:
+        src: /home/dan/Рабочий стол/scalesdecompiled/prog/script/releaseprog/
+        dest: /var/lib/wimlc
+
+# !Необходимо изменить файл!
+# Отправка Service-файла
+    - copy:
+        src: SICK.service
+        dest: /etc/systemd/system/SICK.service
+
+# Отправка и запуск скрипта установки и запуска сервиса
+    - copy:
+        src: RunAndInstall.sh
+        dest: ~/RunAndInstall.sh
+    - name: Redact rules
+      shell: chmod 755 ~/RunAndInstall.sh
+      register: command_output
+      ignore_errors: yes
+    - name: Run and install
+      shell: ~/RunAndInstall.sh
+      register: command_output
+      ignore_errors: yes
+      
+      
+      

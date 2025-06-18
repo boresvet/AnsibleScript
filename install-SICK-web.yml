@@ -1,0 +1,5 @@
+- name: Check if SICK-DEB is installed
+  command: dpkg-query -W my_package
+  register: my_package_check_deb
+  failed_when: my_package_check_deb.rc > 1
+  changed_when: my_package_check_deb.rc == 1

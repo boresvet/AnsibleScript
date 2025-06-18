@@ -1,0 +1,13 @@
+[Unit]
+Description=SICK
+
+[Service]
+WorkingDirectory=/var/lib/wimlc
+Type=simple
+ExecStart=/var/lib/wimlc/program
+Restart=always
+RestartSec=10
+User=root
+
+[Install]
+WantedBy=multi-user.target
