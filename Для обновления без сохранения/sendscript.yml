@@ -1,3 +1,4 @@
+# Заменить на свою группу хостов при необходимости
 - hosts: localdomain
   become: yes
   tasks:
