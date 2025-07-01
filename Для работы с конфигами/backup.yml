@@ -1,0 +1,24 @@
+---
+- name: Backup files from multiple hosts
+  hosts: localdomain
+  become: yes
+  vars:
+    backup_destination: "Configs/{{ inventory_hostname }}"
+  vars_files:
+    - files_to_backup.yml
+
+  tasks:
+
+    - name: Ensure backup directory exists
+      file:
+        path: "{{ backup_destination }}"
+        state: directory
+
+    - name: Download files from the remote host
+      fetch:
+        src: "{{ item }}"
+        dest: "{{ backup_destination }}{{ item }}"
+        flat: yes
+      loop: "{{ files_to_backup }}"
+
+
