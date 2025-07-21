@@ -1,0 +1,20 @@
+# Заменить на свою группу хостов при необходимости
+- hosts: localdomain
+  become: yes
+  tasks:
+
+# Скрипт останавливает работающий сервис, удаляет его директорию, создаёт директорию заново для копирования в неё же обновлённой версии
+    - copy:
+        src: Restart.sh
+        dest: ~/Restart.sh
+# Выдача прав на исполнение соответствующему скрипту
+    - name: Redact rules
+      shell: chmod 755 ~/Restart.sh
+      register: command_output
+      ignore_errors: yes
+
+# Запуск скрипта
+    - name: Stop service and remove
+      shell: sudo ~/Restart.sh
+      register: command_output  
+      ignore_errors: yes
